@@ -4,8 +4,18 @@ searchEl=document.getElementById('search');
 const TIER_LABEL={high:'Priority',moderate:'Building',hold:'Holding',unknown:'No telephony data',low_volume:'Low volume'};
 const TIER_CLASS={high:'priority',moderate:'building',hold:'holding',unknown:'nodata',low_volume:'nodata'};
 let state={tier:'all',pcn:'',q:'',sortK:'missN',sortDir:-1};
+const pct = v => (v == null || isNaN(v)) ? null : Number(v).toFixed(1) + '%';
+const KEEP_UPPER = new Set(['PCN', 'NHS', 'GP', 'ICB', 'NEL']);
+function tidyName(s) {
+  return String(s).toLowerCase()
+    .replace(/[a-z][a-z']*/g, w => w[0].toUpperCase() + w.slice(1))
+    .replace(/[A-Za-z]+/g, w => KEEP_UPPER.has(w.toUpperCase()) ? w.toUpperCase() : w)
+    .replace(/'/g, '\u2019').replace(/^At Medics/, 'AT Medics');
+}
+const TIER_SHORT={high:'Priority',moderate:'Building',hold:'Holding',unknown:'No data',low_volume:'Low volume'};
 
-DATA.pcns.forEach(p=>{const o=document.createElement('option');o.value=p.pcn;o.textContent=p.pcn;pcnSel.appendChild(o)});
+
+DATA.pcns.forEach(p=>{const o=document.createElement('option');o.value=p.pcn;o.textContent=tidyName(p.pcn);pcnSel.appendChild(o)});
 
 function rows(){
   let r=DATA.practices.filter(p=>{
@@ -20,15 +30,6 @@ function rows(){
     return (ka<kb?-1:ka>kb?1:0)*state.sortDir});
   return r}
 
-const pct = v => (v == null || isNaN(v)) ? null : Number(v).toFixed(1) + '%';
-const KEEP_UPPER = new Set(['PCN', 'NHS', 'GP', 'ICB', 'NEL']);
-function tidyName(s) {
-  return String(s).toLowerCase()
-    .replace(/[a-z][a-z']*/g, w => w[0].toUpperCase() + w.slice(1))
-    .replace(/[A-Za-z]+/g, w => KEEP_UPPER.has(w.toUpperCase()) ? w.toUpperCase() : w)
-    .replace(/'/g, '\u2019').replace(/^At Medics/, 'AT Medics');
-}
-const TIER_SHORT={high:'Priority',moderate:'Building',hold:'Holding',unknown:'No data',low_volume:'Low volume'};
 const NIL='<span class="nil">n/a</span>';
 function fmt(v){return v==null?NIL:v}
 function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
@@ -51,7 +52,7 @@ function render(){hideDetail();
 function renderPcn(){
   let h='';
   for(const p of DATA.pcns){
-    h+=`<tr><td><span class="practice-name">${esc(p.pcn)}</span></td><td class="num">${p.practices}</td>
+    h+=`<tr><td><span class="practice-name">${esc(tidyName(p.pcn))}</span></td><td class="num">${p.practices}</td>
     <td class="num">${p.high?'<span class="badge priority">'+p.high+'</span>':NIL}</td>
     <td class="num">${p.moderate||NIL}</td><td class="num">${pct(p.miss810)||NIL}</td>
     <td class="num">${p.patients.toLocaleString()}</td></tr>`}
