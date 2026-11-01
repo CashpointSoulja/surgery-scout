@@ -15,7 +15,7 @@
 <header class="topbar"><div class="topbar-inner">
   <a class="brand" href="#top"><img class="brand-logo" src="ql-black-logo.svg" alt="QuantumLoopAI"><span class="brand-name">Surgery Scout</span></a>
   <span class="chip chip-unofficial">Unofficial concept</span>
-  <span class="topbar-meta">NHS North East London, September 2026 data</span>
+  <span class="topbar-meta">NHS North East London, July to September 2026 data</span>
 </div></header>
 
 <main>
@@ -24,7 +24,7 @@
     <h1>Surgery Scout</h1>
     <p class="pitch"><strong>I read the SDR job description.</strong> It says you sell EMMA, an AI receptionist for NHS GP surgeries, and that the 8am rush is the problem it solves. I read the same coverage your prospects have read: the BBC, Healthwatch and trade press on AI receptionists, good and bad.</p>
 <p class="pitch"><strong>So I built the tool I&rsquo;d actually use on day one.</strong> Surgery Scout turns NHS England&rsquo;s public cloud-telephony data into a prioritised, practice-by-practice call list for North East London: 261 practices and 48 PCNs, each traceable by its NHS practice code, with the objections already loaded.</p>
-<p class="pitch"><strong>Every figure is checkable.</strong> Telephony figures come from NHS England&rsquo;s published September 2026 return, and practice identities and list sizes from the October 2026 registration extract. Definitions, my tier thresholds and the exact source links are in the Method below.</p>
+<p class="pitch"><strong>Every figure is checkable.</strong> Telephony figures come from NHS England&rsquo;s published July, August and September 2026 returns, and practice identities and list sizes from the October 2026 registration extract. Definitions, my tier thresholds and the exact source links are in the Method below.</p>
   </div>
   </div>
   <aside class="hero-panel" aria-label="Data scope">
@@ -41,19 +41,25 @@
   <input type="search" class="search" id="search" placeholder="Search practice or PCN" aria-label="Search practices or PCNs">
     <div class="tf-group" role="group" aria-label="Filter by tier">
       <button class="tf active" data-tier="all" aria-pressed="true">All</button>
-      <button class="tf" data-tier="priority" aria-pressed="false">Priority <span class="count">81</span></button>
-      <button class="tf" data-tier="building" aria-pressed="false">Building <span class="count">85</span></button>
-      <button class="tf" data-tier="holding" aria-pressed="false">Holding <span class="count">78</span></button>
+      <button class="tf" data-tier="priority" aria-pressed="false">Priority <span class="count">68</span></button>
+      <button class="tf" data-tier="building" aria-pressed="false">Building <span class="count">84</span></button>
+      <button class="tf" data-tier="holding" aria-pressed="false">Holding <span class="count">92</span></button>
       <button class="tf" data-tier="nodata" aria-pressed="false">No telephony data <span class="count">17</span></button>
     </div>
     <label class="field"><span>PCN</span><select id="pcnFilter"><option value="">All PCNs</option></select></label>
   <p class="result-count" id="count" aria-live="polite"></p>
   <ul class="legend">
-    <li><span class="badge priority">Priority</span> missed 15%+ of 8&ndash;10am calls, or 40% or fewer answered within 2 min</li>
-    <li><span class="badge building">Building</span> missed 8&ndash;15% or 40&ndash;60% fast-answer</li>
-    <li><span class="badge holding">Holding</span> missed under 8% and over 60% fast-answer</li>
-    <li><span class="badge nodata">No telephony data</span> not in the Sept cloud-telephony return</li>
+    <li><span class="badge priority">Priority</span> missed 15%+ of 8&ndash;10am calls, or 40% or fewer answered within 2 min, July to September combined</li>
+    <li><span class="badge building">Building</span> missed 8&ndash;15% or 40&ndash;60% fast-answer, July to September combined</li>
+    <li><span class="badge holding">Holding</span> missed under 8% and over 60% fast-answer, July to September combined</li>
+    <li><span class="badge nodata">No telephony data</span> not in the September return, ask first</li>
     <li class="legend-note">Editorial thresholds I set (see Method).</li>
+    <li class="legend-note">All figures: weekday calls between 8 and 10am, July to September 2026 combined.</li>
+    <li class="legend-row"><ul class="legend-reasons" aria-label="Reason codes">
+      <li><span class="reason">High abandonment</span> 15% or more of calls ended while the caller was waiting</li>
+      <li><span class="reason">Slow answer</span> 40% or fewer of answered calls picked up within 2 minutes</li>
+      <li><span class="reason">Demand surge</span> calls per 1,000 patients in the top tenth of NEL practices</li>
+    </ul></li>
   </ul>
 </section>
 
@@ -61,7 +67,7 @@
   <table id="ptable">
     <thead><tr>
       <th data-k="name">Practice</th><th data-k="pcn">PCN</th><th data-k="patients" class="num">Patients</th>
-      <th data-k="inb810" class="num">8&ndash;10am calls</th><th data-k="missN" class="num">Missed calls</th><th data-k="miss810" class="num">Missed %</th><th data-k="fast810" class="num">&le;2min %</th>
+      <th data-k="inbound" class="num">8&ndash;10am calls</th><th data-k="missed" class="num">Missed calls</th><th data-k="missed_pct" class="num">Missed %</th><th data-k="fast2_pct" class="num">&le;2 min %</th><th data-k="trend" class="num">Trend</th>
     </tr></thead>
     <tbody id="tbody"></tbody>
   </table>
@@ -74,7 +80,7 @@
   <p>Practices in the same Primary Care Network often share telephony and buying decisions. Networks with several Priority practices are where one conversation can open a cluster.</p>
   <div class="table-wrap">
     <table>
-      <thead><tr><th>PCN</th><th class="num">Practices</th><th class="num">Priority</th><th class="num">Building</th><th class="num">Network missed % (8&ndash;10am)</th><th class="num">Patients</th></tr></thead>
+      <thead><tr><th>PCN</th><th class="num">Practices</th><th class="num">Priority</th><th class="num">Building</th><th class="num">Network missed % (8&ndash;10am, Jul&ndash;Sep)</th><th class="num">Patients</th></tr></thead>
       <tbody id="pcnbody"></tbody>
     </table>
   </div>
@@ -102,12 +108,17 @@
 <section class="method" id="method">
   <h2>Method, sources and limits</h2>
   <ul class="method-list">
-<li><strong>Data.</strong> NHS England <em>Cloud Based Telephony Data in General Practice, September 2026</em> (published 29 Oct 2026): practice-level daily inbound calls, calls ended during the IVR stage, answered calls by wait time, missed calls and callbacks. <a href="https://digital.nhs.uk/data-and-information/publications/statistical/cloud-based-telephony-data-in-general-practice/september-2026" target="_blank" rel="noopener">Publication page</a> &middot; <a href="https://files.digital.nhs.uk/DF/67D81E/Cloud%20Based%20Telephony%20Calls%20Answered%20Metric%20-%20September%202026.zip" target="_blank" rel="noopener">Calls-answered file</a> &middot; <a href="https://files.digital.nhs.uk/7E/33E844/Cloud%20Based%20Telephony%20By%20Day%20and%20Time%20-%20September%202026.zip" target="_blank" rel="noopener">By-day-and-time file</a> &middot; <a href="https://files.digital.nhs.uk/9D/8AE597/Cloud%20Based%20Telephony%20Metadata%202026.xlsx" target="_blank" rel="noopener">Field metadata</a></li>
-          <li><strong>What &ldquo;missed&rdquo; means here.</strong> Per NHS England&rsquo;s definitions, each inbound call ends in one of four counted outcomes: answered, missed, ended during the IVR message before joining the queue, or callback requested. This tool&rsquo;s &ldquo;missed&rdquo; is exactly the missed category - calls not dealt with, voicemails included - and excludes IVR-stage exits (about 27% of inbound calls nationally), which are counted separately. These are call outcomes, not people: the same caller may ring several times, succeed on a later attempt, or choose a callback, so the counts show call volumes, not unmet patient need. NHS England also notes outcome totals do not reconcile exactly for a large number of practices (it is working with suppliers on why).</li>
-          <li><strong>Practice identity, list sizes, PCNs.</strong> NHS England <em>Patients Registered at a GP Practice</em>, October 2026 extract. <a href="https://digital.nhs.uk/data-and-information/publications/statistical/patients-registered-at-a-gp-practice" target="_blank" rel="noopener">Publication page</a>. All public data, used under the <a href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" target="_blank" rel="noopener">Open Government Licence v3.0</a>. No patient-level data exists in these datasets or in this tool.</li>
-          <li><strong>Metrics.</strong> &ldquo;8&ndash;10am&rdquo; = the publication&rsquo;s 08:00&ndash;10:00 reporting category, all September weekdays (NHS England separately reports core hours 08:00&ndash;18:30; the all-day figures here use that window). &ldquo;Missed %&rdquo; = missed &divide; inbound. &ldquo;&le;2min %&rdquo; = calls answered within 120 seconds &divide; all answered calls. Benchmarks: NEL practices missed 10.0% of 8&ndash;10am calls in September (32,109 of 321,082); England-wide, 10.9% of all core-hours calls were missed.</li>
-          <li><strong>Tiers are my editorial thresholds</strong> (stated above) and the table sorts by the raw count of missed 8&ndash;10am calls, not an invented score. A tier is a reason a conversation might be relevant - measured phone pressure, not proven buying intent, budget or authority. Those are established in the conversation, not in a spreadsheet. High pressure is a phone-system problem, not a judgement of care quality or of the practice&rsquo;s staff.</li>
-          <li><strong>Scope is one ICB</strong> (North East London: 261 practices, 244 in the September return = 93%, the highest coverage of the five London ICBs, which range 82&ndash;91% in the same data). Chosen because it&rsquo;s the home patch for a Canary Wharf-based SDR and coverage makes it the cleanest demonstration. The same method rolls out nationally.</li>
+<li><strong>Data.</strong> NHS England <em>Cloud Based Telephony Data in General Practice</em>, July, August and September 2026 returns: practice-level inbound calls, calls ended during the IVR stage, answered calls by wait time, missed calls and callbacks. <a href="https://digital.nhs.uk/data-and-information/publications/statistical/cloud-based-telephony-data-in-general-practice/september-2026" target="_blank" rel="noopener">Publication page</a> &middot; <a href="https://files.digital.nhs.uk/9D/8AE597/Cloud%20Based%20Telephony%20Metadata%202026.xlsx" target="_blank" rel="noopener">Field metadata</a><br><span id="m-sources"></span></li>
+          <li><strong>What &ldquo;missed&rdquo; means here.</strong> Per NHS England&rsquo;s definitions, each inbound call ends in one of four counted outcomes: answered, missed, ended during the IVR message before joining the queue, or callback requested. This tool&rsquo;s &ldquo;missed&rdquo; is exactly the missed category - calls not dealt with, voicemails included - and excludes IVR-stage exits (about a quarter of inbound calls nationally - 25.4% across July to September 2026), which are counted separately. These are call outcomes, not people: the same caller may ring several times, succeed on a later attempt, or choose a callback, so the counts show call volumes, not unmet patient need. NHS England also notes outcome totals do not reconcile exactly for a large number of practices (it is working with suppliers on why).</li>
+          <li><strong>Practice identity, list sizes, PCNs.</strong> NHS England <em>Patients Registered at a GP Practice</em>, October 2026 extract. <a href="https://digital.nhs.uk/data-and-information/publications/statistical/patients-registered-at-a-gp-practice" target="_blank" rel="noopener">Publication page</a> &middot; <a id="m-registration" href="https://files.digital.nhs.uk/FB/7851F6/gp-reg-pat-prac-all.zip" target="_blank" rel="noopener">Registration file</a>. All public data, used under the <a href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" target="_blank" rel="noopener">Open Government Licence v3.0</a>. No patient-level data exists in these datasets or in this tool.</li>
+          <li><strong>Three months, combined.</strong> Every rate adds up the counts for July, August and September first, then divides once, so a busy month weighs more than a quiet one. &ldquo;8&ndash;10am&rdquo; is the publication&rsquo;s weekday Core 8&ndash;10 category; all-day calls are Core 8&ndash;10 plus Core 10&ndash;18:30. &ldquo;Missed %&rdquo; = missed &divide; inbound. &ldquo;&le;2 min %&rdquo; = calls answered within 120 seconds &divide; all answered calls, and &ldquo;&le;30 s %&rdquo; = calls answered within 30 seconds &divide; all answered calls; both sides of each come from the Calls Answered file, so they are consistent. A month a practice is missing from is left out, not counted as zero, and the practice&rsquo;s detail says when fewer than three months are behind its figures. Benchmark: NEL&rsquo;s tiered practices missed <span data-fig="benchPct"></span> of 8&ndash;10am calls from July to September (<span data-fig="benchMissed"></span> of <span data-fig="benchInbound"></span>).</li>
+          <li><strong>Tier rule (editorial thresholds I set).</strong> Priority: missed 15.0% or more, or 40.0% or fewer answered within 2 minutes. Building: not Priority, and missed 8.0% or more, or 60.0% or fewer answered within 2 minutes. Holding: missed under 8.0% and over 60.0% answered within 2 minutes; a practice with no answer-time data can&rsquo;t show that, so it sits in Building. No telephony data: not in the September return, whatever July or August show. Thresholds are compared on unrounded figures. The table sorts by tier, then by the raw count of missed 8&ndash;10am calls, not an invented score. A tier is a reason a conversation might be relevant: measured phone pressure, not proven buying intent, budget or authority. High pressure is a phone-system problem, not a judgement of care quality or of the practice&rsquo;s staff.</li>
+          <li><strong>Reason codes.</strong> They explain a tier and never rank practices. <em>High abandonment</em>: missed 15.0% or more. <em>Slow answer</em>: 40.0% or fewer of answered calls picked up within 2 minutes. <em>Demand surge</em>: calls per 1,000 patients at or above <span data-fig="demandCut"></span>, the 90th percentile (nearest-rank method, rank <span data-fig="demandRank"></span> of <span data-fig="demandN"></span>) of practices that are in the September return, have a list size above zero and have two or more months of data. The detail lists every code that applies; the table row shows the first match in the order abandonment, slow, demand. Every Priority practice carries abandonment or slow by construction; a Building or Holding practice can carry demand alone.</li>
+          <li><strong>Trend (editorial).</strong> September missed % minus July missed %, in percentage points. It needs both months with at least 100 inbound 8&ndash;10am calls each; otherwise it shows n/a. A rise of 3.0 points or more counts as worsening (&#9650;), a fall of 3.0 points or more as improving (&#9660;), anything between as steady. The 3-point threshold is my editorial choice. Trend never changes a tier.</li>
+          <li><strong>Why 30 seconds.</strong> EMMA&rsquo;s published standard is three rings. NHS data groups answer times in 30-second bands, and three rings falls inside the first, so 30 seconds is the closest checkable measure. The band runs to 30 seconds, so it is a generous stand-in for three rings, not the same thing.</li>
+          <li><strong>Calls per 1,000 patients.</strong> 8&ndash;10am inbound calls from July to September, divided by the number of months with data to give a monthly average, divided by registered patients (October 2026 extract), times 1,000. Shown as a whole number. It counts calls, not people, so repeat calls push it up.</li>
+          <li><strong>Low call volume.</strong> A practice with fewer than 300 inbound 8&ndash;10am calls across the months combined is flagged in its detail, because its rates move a lot from month to month. It is still tiered. Practices flagged in this data: <span data-fig="lowVolume"></span>.</li>
+          <li><strong>Scope is one ICB</strong> (North East London: <span data-fig="total">261</span> practices, <span data-fig="inLast">244</span> in the September return = <span data-fig="inLastPct">93%</span>, the highest coverage of the five London ICBs, which range 82&ndash;91% in the same data). Chosen because it&rsquo;s the home patch for a Canary Wharf-based SDR and coverage makes it the cleanest demonstration. The same method rolls out nationally.</li>
           <li><strong>Coverage caveats.</strong> The return covers practices whose telephony supplier provides data; practices not in the return are marked &ldquo;No telephony data&rdquo; - an open question for the first call, not a verdict. A practice that already runs an AI receptionist or diverts calls may show distorted numbers.</li>
           <li><strong>Customer status.</strong> QuantumLoopAI&rsquo;s customer list is not public. No practice in this tool should be treated as confirmed net-new; check the CRM before any outreach. (The one customer I could confirm publicly, Priory Medical Centre in York, is outside this patch.)</li>
           <li><strong>Not in v1.</strong> GP Patient Survey phone-access results (public, practice-level; not merged in v1), national rollout, monthly auto-refresh. Each is a week-one addition with a known build plan.</li>
@@ -119,11 +130,12 @@
 <footer class="site-footer">
   <div class="wrap">
     <p><strong>Surgery Scout is an unofficial concept by Ayo Ahmed.</strong> It is not affiliated with, endorsed by, or commissioned by QuantumLoopAI. The QuantumLoopAI name and logo appear only to show the company this concept was built for.</p>
-    <p>Built from public NHS England data under the Open Government Licence. September to October 2026 extracts.</p>
+    <p>Built from public NHS England data under the Open Government Licence. July to October 2026 extracts.</p>
   </div>
 </footer>
 
 <script src="data.js"></script>
+<script src="loader.js"></script>
 <script src="app.js"></script>
 </body>
 </html>
