@@ -107,7 +107,7 @@ function showDetail(code){
   <h4>Discovery questions</h4><ul>
     <li>What happens to a caller at 8:05am today: queue, engaged tone, or a person?</li>
     <li>How do you currently measure whether every patient gets through, including patients with speech difficulties or English as an additional language?</li>
-    <li>If calls were answered on the first ring, what would your reception team do with the freed hours?</li></ul>`;
+    <li>If calls were answered promptly, what would your reception team do with the freed hours?</li></ul>`;
   detail.classList.remove('hidden');placeDetail(row);const cb=detail.querySelector('.detail-close');if(cb)cb.focus()}
 
 tbody.addEventListener('click',e=>{const tr=e.target.closest('tr');if(tr&&!tr.classList.contains('detail-row'))showDetail(tr.dataset.code)});
