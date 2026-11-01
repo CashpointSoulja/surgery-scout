@@ -206,7 +206,7 @@ function drawerBody(p) {
     ${stat(trendHtml(p.trend), `Trend, ${shortMonth(LAST)} vs ${shortMonth(FIRST)}`)}
     ${stat(int(p.tot.inbound_allday), `All-day calls (${PERIOD_SHORT})`)}
   </dl>
-  <p class="detail-note">EMMA’s published standard is three rings. NHS data groups answer times in 30-second bands, and three rings falls inside the first, so 30 seconds is the closest checkable measure.</p>
+  <p class="detail-note">EMMA’s published standard is three rings, but EMMA does not publish how long a ring is, and NHS data groups answer times into 30-second bands. The three-ring promise cannot be checked against these bands. Answered within 30 seconds is the closest available proxy, not the same measure.</p>
   <h4>Month by month</h4>
   <table class="months-table"><thead><tr><th>Month</th><th class="num">Calls</th><th class="num">Missed</th><th class="num">Missed %</th></tr></thead><tbody>${monthRows}</tbody></table>
   ${notes.join('')}
