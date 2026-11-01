@@ -2,115 +2,126 @@
 <html lang="en-GB">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Surgery Scout - an unofficial QuantumLoopAI concept</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#faf9f6">
+<title>Surgery Scout: an unofficial QuantumLoopAI concept</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<header class="topbar">
-  <div class="wrap topbar-in">
-    <img src="ql-black-logo.svg" alt="QuantumLoopAI" class="logo">
-    <div class="titleblock">
-      <h1>Surgery Scout</h1>
-      <p class="tag">Unofficial concept &middot; NHS North East London &middot; September 2026 data</p>
-    </div>
-  </div>
-</header>
+<header class="topbar"><div class="topbar-inner">
+  <a class="brand" href="#top"><img class="brand-logo" src="ql-black-logo.svg" alt="QuantumLoopAI"><span class="brand-name">Surgery Scout</span></a>
+  <span class="chip chip-unofficial">Unofficial concept</span>
+  <span class="topbar-meta">NHS North East London, September 2026 data</span>
+</div></header>
 
-<section class="hero">
-  <div class="wrap">
+<main>
+<section class="hero" id="top">
+  <div class="hero-letter">
+    <h1>Surgery Scout</h1>
     <p class="pitch"><strong>I read the SDR job description.</strong> It says you sell EMMA, an AI receptionist for NHS GP surgeries, and the biggest number in the story is the 8am rush. I read the same coverage your prospects have read - the BBC, Healthwatch and trade press on AI receptionists, good and bad.</p>
-    <p class="pitch"><strong>So I built the tool I&rsquo;d actually use on day one.</strong> Surgery Scout turns NHS England&rsquo;s public cloud-telephony data into a prioritised, practice-by-practice call list for North East London - 261 practices and 48 PCNs, every one traceable by its NHS practice code, with the objections already loaded.</p>
-    <p class="pitch"><strong>Telephony figures come from NHS England&rsquo;s published September 2026 return;</strong> practice identities and list sizes from the October 2026 registration extract. Definitions, my editorial tier thresholds and the exact source links are in the Method below, so the fastest route from &ldquo;who do I call this morning?&rdquo; to a conversation worth having is also a checkable one.</p>
+<p class="pitch"><strong>So I built the tool I&rsquo;d actually use on day one.</strong> Surgery Scout turns NHS England&rsquo;s public cloud-telephony data into a prioritised, practice-by-practice call list for North East London - 261 practices and 48 PCNs, every one traceable by its NHS practice code, with the objections already loaded.</p>
+<p class="pitch"><strong>Telephony figures come from NHS England&rsquo;s published September 2026 return;</strong> practice identities and list sizes from the October 2026 registration extract. Definitions, my editorial tier thresholds and the exact source links are in the Method below, so the fastest route from &ldquo;who do I call this morning?&rdquo; to a conversation worth having is also a checkable one.</p>
   </div>
+  </div>
+  <aside class="hero-panel" aria-label="Data scope">
+    <dl class="hero-facts">
+      <div><dt>Practices</dt><dd>261</dd></div>
+      <div><dt>PCNs</dt><dd>48</dd></div>
+      <div><dt>In the Sept telephony return</dt><dd>244</dd></div>
+    </dl>
+    <a class="btn btn-on-signal" href="#list">Open the call list</a>
+  </aside>
 </section>
 
-<section class="controls wrap">
+<section class="controls" id="list">
   <div class="control-row">
     <input type="search" id="search" placeholder="Search practice or PCN&hellip;" aria-label="Search">
-    <div class="tier-filters" role="group" aria-label="Tier filter">
-      <button class="tf active" data-tier="all">All</button>
-      <button class="tf tf-high" data-tier="high">Priority</button>
-      <button class="tf tf-mod" data-tier="moderate">Building</button>
-      <button class="tf tf-hold" data-tier="hold">Holding</button>
-      <button class="tf tf-unk" data-tier="unknown">No telephony data</button>
+    <div class="tf-group" role="group" aria-label="Filter by tier">
+      <button class="tf active" data-tier="all" aria-pressed="true">All</button>
+      <button class="tf" data-tier="priority" aria-pressed="false">Priority <span class="count">81</span></button>
+      <button class="tf" data-tier="building" aria-pressed="false">Building <span class="count">85</span></button>
+      <button class="tf" data-tier="holding" aria-pressed="false">Holding <span class="count">78</span></button>
+      <button class="tf" data-tier="nodata" aria-pressed="false">No telephony data <span class="count">17</span></button>
     </div>
-    <select id="pcnFilter"><option value="">All PCNs</option></select>
+    <label class="field"><span>PCN</span><select id="pcnFilter"><option value="">All PCNs</option></select></label>
   </div>
-  <p class="count" id="count"></p>
-  <p class="thresholds"><strong>How practices are tiered</strong> (editorial thresholds I set - see Method):
-    <span class="pill p-high">Priority</span> missed ≥15% of 8&ndash;10am calls, or ≤40% answered within 2 min &middot;
-    <span class="pill p-mod">Building</span> missed 8&ndash;15% or 40&ndash;60% fast-answer &middot;
-    <span class="pill p-hold">Holding</span> missed &lt;8% and &gt;60% fast-answer &middot;
-    <span class="pill p-unk">No telephony data</span> not in the Sept cloud-telephony return</p>
+  <p class="count-line" id="count"></p>
+  <ul class="legend">
+    <li><span class="badge priority">Priority</span> missed 15%+ of 8&ndash;10am calls, or 40% or fewer answered within 2 min</li>
+    <li><span class="badge building">Building</span> missed 8&ndash;15% or 40&ndash;60% fast-answer</li>
+    <li><span class="badge holding">Holding</span> missed under 8% and over 60% fast-answer</li>
+    <li><span class="badge nodata">No telephony data</span> not in the Sept cloud-telephony return</li>
+    <li class="legend-note">Editorial thresholds I set (see Method).</li>
+  </ul>
 </section>
 
-<main class="wrap">
-  <div class="tablewrap">
-    <table id="ptable">
-      <thead><tr>
-        <th data-k="name">Practice</th><th data-k="pcn">PCN</th><th data-k="patients" class="num">Patients</th>
-        <th data-k="inb810" class="num">8&ndash;10am calls</th><th data-k="missN" class="num">Missed calls</th><th data-k="miss810" class="num">Missed %</th><th data-k="fast810" class="num">&le;2min %</th>
-      </tr></thead>
-      <tbody id="tbody"></tbody>
+<div class="table-wrap">
+  <table id="ptable">
+    <thead><tr>
+      <th data-k="name">Practice</th><th data-k="pcn">PCN</th><th data-k="patients" class="num">Patients</th>
+      <th data-k="inb810" class="num">8&ndash;10am calls</th><th data-k="missN" class="num">Missed calls</th><th data-k="miss810" class="num">Missed %</th><th data-k="fast810" class="num">&le;2min %</th>
+    </tr></thead>
+    <tbody id="tbody"></tbody>
+  </table>
+</div>
+
+<aside id="detail" class="detail hidden" aria-live="polite"></aside>
+
+<section class="pcn">
+  <h2>PCN view: where a network conversation makes sense</h2>
+  <p>Practices in the same Primary Care Network often share telephony and buying decisions. Networks with several Priority practices are where one conversation can open a cluster.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>PCN</th><th class="num">Practices</th><th class="num">Priority</th><th class="num">Building</th><th class="num">Network missed % (8&ndash;10am)</th><th class="num">Patients</th></tr></thead>
+      <tbody id="pcnbody"></tbody>
     </table>
   </div>
+</section>
 
-  <aside id="detail" class="detail hidden" aria-live="polite"></aside>
-
-  <section class="pcn">
-    <h2>PCN view - where a network conversation makes sense</h2>
-    <p>Practices in the same Primary Care Network often share telephony and buying decisions. Networks with several Priority practices are where one conversation can open a cluster.</p>
-    <div class="tablewrap">
-      <table>
-        <thead><tr><th>PCN</th><th class="num">Practices</th><th class="num">Priority</th><th class="num">Building</th><th class="num">Network missed % (8&ndash;10am)</th><th class="num">Patients</th></tr></thead>
-        <tbody id="pcnbody"></tbody>
-      </table>
-    </div>
-  </section>
-
-  <section class="objections">
-    <h2>The objections are already public - so is the preparation</h2>
-    <p>AI receptionists have had press, some of it hard. An SDR who hasn&rsquo;t read it gets flattened on the first call. These cards are the two questions I&rsquo;d expect first, and how I&rsquo;d handle them.</p>
-    <div class="cards">
-      <div class="card">
-        <h3>&ldquo;We read about the accent problem.&rdquo;</h3>
+<section class="objections">
+  <h2>The objections are already public, so is the preparation</h2>
+  <p>AI receptionists have had press, some of it hard. An SDR who hasn&rsquo;t read it gets flattened on the first call. These cards are the two questions I&rsquo;d expect first, and how I&rsquo;d handle them.</p>
+  <div class="cards">
+    <article class="card">
+      <h3>&ldquo;We read about the accent problem.&rdquo;</h3>
         <p>On 10 July 2026, Healthwatch Rotherham published patient concerns about EMMA struggling with non-standard accents and speech difficulties, naming QuantumLoopAI as the company behind the system. In August the BBC reported the Rotherham concerns, and separately that a Doncaster surgery stopped using EMMA after a stroke patient repeatedly couldn&rsquo;t get through to book.</p>
         <p class="answer"><strong>The honest answer:</strong> acknowledge it, then go to what the company actually says. QuantumLoopAI&rsquo;s published response states EMMA does not make clinical decisions, is trained on a wide range of accents and dialects, and supports 17 languages; their own materials say callers can ask for a member of staff at any time and practices can configure priority routing so patients who need a person get one. Then the discovery question that matters: <em>&ldquo;How are you measuring whether every patient cohort gets through today?&rdquo;</em> A practice whose phone performance is already failing some patients has that problem with or without EMMA.</p>
-        <p class="src"><a href="https://www.healthwatchrotherham.org.uk/blog/2026-07-10/patient-concern-over-ai-receptionist-emma-what-you-need-know" target="_blank" rel="noopener">Healthwatch Rotherham, 10 Jul 2026</a> &middot; <a href="https://www.bbc.co.uk/news/articles/c141dn3d26do" target="_blank" rel="noopener">BBC, Aug 2026</a> &middot; <a href="https://www.bbc.co.uk/news/articles/c4gql3gz9z7o" target="_blank" rel="noopener">BBC, 26 Aug 2026</a></p>
-      </div>
-      <div class="card">
-        <h3>&ldquo;Is this even allowed under our GP contract?&rdquo;</h3>
+        <ul class="sources"><li><a href="https://www.healthwatchrotherham.org.uk/blog/2026-07-10/patient-concern-over-ai-receptionist-emma-what-you-need-know" target="_blank" rel="noopener">Healthwatch Rotherham, 10 Jul 2026</a></li><li><a href="https://www.bbc.co.uk/news/articles/c141dn3d26do" target="_blank" rel="noopener">BBC, Aug 2026</a></li><li><a href="https://www.bbc.co.uk/news/articles/c4gql3gz9z7o" target="_blank" rel="noopener">BBC, 26 Aug 2026</a></li></ul>
+    </article>
+    <article class="card">
+      <h3>&ldquo;Is this even allowed under our GP contract?&rdquo;</h3>
         <p>Pulse reported on 9 April 2026 that NHS England advice, shared with practices by North East and North Cumbria ICB, warned that AI receptionist call handling could put practices in breach of their GP contract - specifically the obligation to share digital-telephony data with NHS England, which an AI layer can obscure.</p>
         <p class="answer"><strong>The honest answer:</strong> it&rsquo;s a real question with a real shape, and the SDR should know it cold. The reported advice concerns telephony data reporting, not a ban on AI reception. It&rsquo;s also a question for the company&rsquo;s compliance pack, not for improvisation on a call: <em>&ldquo;That&rsquo;s exactly what our compliance documentation covers - the NHS telephony reporting still flows. Can I set that up with your practice manager?&rdquo;</em> Local ICBs may issue their own advice, so checking what the practice&rsquo;s ICB has said is part of pre-call research, not an afterthought.</p>
-        <p class="src"><a href="https://www.pulsetoday.co.uk/news/technology/gps-told-to-ensure-they-are-not-breaching-contract-when-using-ai-receptionists/" target="_blank" rel="noopener">Pulse, 9 Apr 2026</a> (registration may be required)</p>
-      </div>
-    </div>
-  </section>
+        <ul class="sources"><li><a href="https://www.pulsetoday.co.uk/news/technology/gps-told-to-ensure-they-are-not-breaching-contract-when-using-ai-receptionists/" target="_blank" rel="noopener">Pulse, 9 Apr 2026</a> (registration may be required)</li></ul>
+    </article>
+  </div>
+</section>
 
-  <section class="method" id="method">
-    <h2>Method, sources and limits</h2>
-    <ul>
-      <li><strong>Data.</strong> NHS England <em>Cloud Based Telephony Data in General Practice, September 2026</em> (published 29 Oct 2026): practice-level daily inbound calls, calls ended during the IVR stage, answered calls by wait time, missed calls and callbacks. <a href="https://digital.nhs.uk/data-and-information/publications/statistical/cloud-based-telephony-data-in-general-practice/september-2026" target="_blank" rel="noopener">Publication page</a> &middot; <a href="https://files.digital.nhs.uk/DF/67D81E/cbt-answered-sept-2026.zip" target="_blank" rel="noopener">Calls-answered file</a> &middot; <a href="https://files.digital.nhs.uk/7E/33E844/cbt-daytime-sept-2026.zip" target="_blank" rel="noopener">By-day-and-time file</a> &middot; <a href="https://files.digital.nhs.uk/9D/8AE597/cbt-metadata.xlsx" target="_blank" rel="noopener">Field metadata</a></li>
-      <li><strong>What &ldquo;missed&rdquo; means here.</strong> Per NHS England&rsquo;s definitions, each inbound call ends in one of four counted outcomes: answered, missed, ended during the IVR message before joining the queue, or callback requested. This tool&rsquo;s &ldquo;missed&rdquo; is exactly the missed category - calls not dealt with, voicemails included - and excludes IVR-stage exits (about 27% of inbound calls nationally), which are counted separately. These are call outcomes, not people: the same caller may ring several times, succeed on a later attempt, or choose a callback, so the counts show call volumes, not unmet patient need. NHS England also notes outcome totals do not reconcile exactly for a large number of practices (it is working with suppliers on why).</li>
-      <li><strong>Practice identity, list sizes, PCNs.</strong> NHS England <em>Patients Registered at a GP Practice</em>, October 2026 extract. <a href="https://digital.nhs.uk/data-and-information/publications/statistical/patients-registered-at-a-gp-practice" target="_blank" rel="noopener">Publication page</a>. All public data, used under the <a href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" target="_blank" rel="noopener">Open Government Licence v3.0</a>. No patient-level data exists in these datasets or in this tool.</li>
-      <li><strong>Metrics.</strong> &ldquo;8&ndash;10am&rdquo; = the publication&rsquo;s 08:00&ndash;10:00 reporting category, all September weekdays (NHS England separately reports core hours 08:00&ndash;18:30; the all-day figures here use that window). &ldquo;Missed %&rdquo; = missed &divide; inbound. &ldquo;&le;2min %&rdquo; = calls answered within 120 seconds &divide; all answered calls. Benchmarks: NEL practices missed 10.0% of 8&ndash;10am calls in September (32,109 of 321,082); England-wide, 10.9% of all core-hours calls were missed.</li>
-      <li><strong>Tiers are my editorial thresholds</strong> (stated above) and the table sorts by the raw count of missed 8&ndash;10am calls, not an invented score. A tier is a reason a conversation might be relevant - measured phone pressure, not proven buying intent, budget or authority. Those are established in the conversation, not in a spreadsheet. High pressure is a phone-system problem, not a judgement of care quality or of the practice&rsquo;s staff.</li>
-      <li><strong>Scope is one ICB</strong> (North East London: 261 practices, 244 in the September return = 93%, the highest coverage of the five London ICBs, which range 82&ndash;91% in the same data). Chosen because it&rsquo;s the home patch for a Canary Wharf-based SDR and coverage makes it the cleanest demonstration. The same method rolls out nationally.</li>
-      <li><strong>Coverage caveats.</strong> The return covers practices whose telephony supplier provides data; practices not in the return are marked &ldquo;No telephony data&rdquo; - an open question for the first call, not a verdict. A practice that already runs an AI receptionist or diverts calls may show distorted numbers.</li>
-      <li><strong>Customer status.</strong> QuantumLoopAI&rsquo;s customer list is not public. No practice in this tool should be treated as confirmed net-new; check the CRM before any outreach. (The one customer I could confirm publicly, Priory Medical Centre in York, is outside this patch.)</li>
-      <li><strong>Not in v1.</strong> GP Patient Survey phone-access results (public, practice-level; not merged in v1), national rollout, monthly auto-refresh. Each is a week-one addition with a known build plan.</li>
-      <li><strong>Clinical safety note.</strong> Call-volume data says nothing about any individual patient&rsquo;s needs or ability to use any system. This tool ranks phone queues, never patients.</li>
-    </ul>
-  </section>
+<section class="method" id="method">
+  <h2>Method, sources and limits</h2>
+  <ul class="method-list">
+<li><strong>Data.</strong> NHS England <em>Cloud Based Telephony Data in General Practice, September 2026</em> (published 29 Oct 2026): practice-level daily inbound calls, calls ended during the IVR stage, answered calls by wait time, missed calls and callbacks. <a href="https://digital.nhs.uk/data-and-information/publications/statistical/cloud-based-telephony-data-in-general-practice/september-2026" target="_blank" rel="noopener">Publication page</a> &middot; <a href="https://files.digital.nhs.uk/DF/67D81E/cbt-answered-sept-2026.zip" target="_blank" rel="noopener">Calls-answered file</a> &middot; <a href="https://files.digital.nhs.uk/7E/33E844/cbt-daytime-sept-2026.zip" target="_blank" rel="noopener">By-day-and-time file</a> &middot; <a href="https://files.digital.nhs.uk/9D/8AE597/cbt-metadata.xlsx" target="_blank" rel="noopener">Field metadata</a></li>
+          <li><strong>What &ldquo;missed&rdquo; means here.</strong> Per NHS England&rsquo;s definitions, each inbound call ends in one of four counted outcomes: answered, missed, ended during the IVR message before joining the queue, or callback requested. This tool&rsquo;s &ldquo;missed&rdquo; is exactly the missed category - calls not dealt with, voicemails included - and excludes IVR-stage exits (about 27% of inbound calls nationally), which are counted separately. These are call outcomes, not people: the same caller may ring several times, succeed on a later attempt, or choose a callback, so the counts show call volumes, not unmet patient need. NHS England also notes outcome totals do not reconcile exactly for a large number of practices (it is working with suppliers on why).</li>
+          <li><strong>Practice identity, list sizes, PCNs.</strong> NHS England <em>Patients Registered at a GP Practice</em>, October 2026 extract. <a href="https://digital.nhs.uk/data-and-information/publications/statistical/patients-registered-at-a-gp-practice" target="_blank" rel="noopener">Publication page</a>. All public data, used under the <a href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" target="_blank" rel="noopener">Open Government Licence v3.0</a>. No patient-level data exists in these datasets or in this tool.</li>
+          <li><strong>Metrics.</strong> &ldquo;8&ndash;10am&rdquo; = the publication&rsquo;s 08:00&ndash;10:00 reporting category, all September weekdays (NHS England separately reports core hours 08:00&ndash;18:30; the all-day figures here use that window). &ldquo;Missed %&rdquo; = missed &divide; inbound. &ldquo;&le;2min %&rdquo; = calls answered within 120 seconds &divide; all answered calls. Benchmarks: NEL practices missed 10.0% of 8&ndash;10am calls in September (32,109 of 321,082); England-wide, 10.9% of all core-hours calls were missed.</li>
+          <li><strong>Tiers are my editorial thresholds</strong> (stated above) and the table sorts by the raw count of missed 8&ndash;10am calls, not an invented score. A tier is a reason a conversation might be relevant - measured phone pressure, not proven buying intent, budget or authority. Those are established in the conversation, not in a spreadsheet. High pressure is a phone-system problem, not a judgement of care quality or of the practice&rsquo;s staff.</li>
+          <li><strong>Scope is one ICB</strong> (North East London: 261 practices, 244 in the September return = 93%, the highest coverage of the five London ICBs, which range 82&ndash;91% in the same data). Chosen because it&rsquo;s the home patch for a Canary Wharf-based SDR and coverage makes it the cleanest demonstration. The same method rolls out nationally.</li>
+          <li><strong>Coverage caveats.</strong> The return covers practices whose telephony supplier provides data; practices not in the return are marked &ldquo;No telephony data&rdquo; - an open question for the first call, not a verdict. A practice that already runs an AI receptionist or diverts calls may show distorted numbers.</li>
+          <li><strong>Customer status.</strong> QuantumLoopAI&rsquo;s customer list is not public. No practice in this tool should be treated as confirmed net-new; check the CRM before any outreach. (The one customer I could confirm publicly, Priory Medical Centre in York, is outside this patch.)</li>
+          <li><strong>Not in v1.</strong> GP Patient Survey phone-access results (public, practice-level; not merged in v1), national rollout, monthly auto-refresh. Each is a week-one addition with a known build plan.</li>
+          <li><strong>Clinical safety note.</strong> Call-volume data says nothing about any individual patient&rsquo;s needs or ability to use any system. This tool ranks phone queues, never patients.</li>
+  </ul>
+</section>
 </main>
 
-<footer>
+<footer class="site-footer">
   <div class="wrap">
     <p><strong>Surgery Scout is an unofficial concept by Ayo Ahmed.</strong> It is not affiliated with, endorsed by, or commissioned by QuantumLoopAI. The QuantumLoopAI name and logo appear only to show the company this concept was built for.</p>
-    <p>Built from public NHS England data under the Open Government Licence. September&ndash;October 2026 extracts.</p>
+    <p>Built from public NHS England data under the Open Government Licence. September to October 2026 extracts.</p>
   </div>
 </footer>
 
