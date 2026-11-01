@@ -1,14 +1,14 @@
 # Surgery Scout
 
-An unofficial concept built by **Ayo Ahmed** for the QuantumLoopAI SDR role — a prioritised prospecting view of NHS North East London GP practices, built entirely from public NHS England data. Not affiliated with, endorsed by, or commissioned by QuantumLoopAI.
+An unofficial concept built by **Ayo Ahmed** for the QuantumLoopAI SDR role - a prioritised prospecting view of NHS North East London GP practices, built entirely from public NHS England data. Not affiliated with, endorsed by, or commissioned by QuantumLoopAI.
 
 ## What it does
 
-Ranks all 261 NEL practices by September 2026 cloud-telephony performance (8–10am inbound calls, missed-call share, share answered within two minutes), tiers them with stated editorial thresholds, rolls up to PCN level, and gives a per-practice reason-to-call, opener and discovery questions — plus prepped answers to the two objections AI receptionists get in public (accent/access concerns; GP-contract telephony data-sharing advice).
+Ranks all 261 NEL practices by September 2026 cloud-telephony performance (8–10am inbound calls, missed-call share, share answered within two minutes), tiers them with stated editorial thresholds, rolls up to PCN level, and gives a per-practice reason-to-call, opener and discovery questions - plus prepped answers to the two objections AI receptionists get in public (accent/access concerns; GP-contract telephony data-sharing advice).
 
 ## Why (5 Whys, short form)
 
-1. SDRs at QuantumLoopAI sell EMMA, an AI receptionist; the core pain is unanswered calls in the 8am rush.
+1. SDRs at QuantumLoopAI sell EMMA, an AI receptionist; the core pain is missed calls in the 8am rush.
 2. Proving that pain practice-by-practice normally takes manual research per call.
 3. NHS England already publishes the exact metric (missed calls, answer times) practice-by-practice, monthly, publicly.
 4. Nobody in the market is handing their SDR team that data shaped into a call list.
@@ -20,7 +20,7 @@ Ranks all 261 NEL practices by September 2026 cloud-telephony performance (8–1
 - NHS England, *Patients Registered at a GP Practice*, October 2026 extract: list sizes, PCN and ICB mapping.
 - All public data under the Open Government Licence v3.0. No patient-level data.
 - Tier thresholds are editorial choices, stated on the page; they are a targeting hypothesis, not an NHS rating.
-- Scope: NHS North East London ICB (QMF) — home patch for a Canary Wharf SDR, best London data coverage (244/261 practices in the return).
+- Scope: NHS North East London ICB (QMF) - home patch for a Canary Wharf SDR, best London data coverage (244/261 practices in the return).
 
 ## Stack
 
