@@ -93,7 +93,7 @@ function showDetail(code){
     opener=`\u201cQuick one: are you on the NHS cloud-telephony framework yet? I ask because the answer changes what I can show you about your own phone data.\u201d`;}
   const stat=(v,l)=>`<div><dt>${l}</dt><dd>${v}</dd></div>`;
   detail.innerHTML=`<button class="detail-close" aria-label="Close details">×</button>
-  <h3>${esc(p.name)}</h3><p class="detail-sub">${esc(p.pc)} · ${esc(p.pcn||'PCN unknown')} · ODS ${esc(p.code)} · <span class="badge ${TIER_CLASS[p.tier]}">${TIER_LABEL[p.tier]}</span></p>
+  <h3>${esc(p.name)}</h3><p class="detail-sub">${esc(p.pc)} · ${esc(p.pcn?tidyName(p.pcn):'PCN unknown')} · ODS ${esc(p.code)} · <span class="badge ${TIER_CLASS[p.tier]}">${TIER_LABEL[p.tier]}</span></p>
   <dl class="detail-grid">
     ${stat(p.patients?p.patients.toLocaleString():'n/a','Registered patients (Oct 2026)')}
     ${stat(p.inb810!=null?p.inb810.toLocaleString():'n/a','8–10am calls (Sept)')}
@@ -103,7 +103,7 @@ function showDetail(code){
     ${stat(p.inbAll!=null?p.inbAll.toLocaleString():'n/a','All-day calls (8–18:30)')}
   </dl>
   <h4>Why this practice</h4><p>${why}</p>
-  <h4>Suggested opener</h4><p>${opener}</p>
+  <h4>Suggested opener</h4><blockquote class="opener">${opener}</blockquote>
   <h4>Discovery questions</h4><ul>
     <li>What happens to a caller at 8:05am today: queue, engaged tone, or a person?</li>
     <li>How do you currently measure whether every patient gets through, including patients with speech difficulties or English as an additional language?</li>

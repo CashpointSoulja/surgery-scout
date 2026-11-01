@@ -904,3 +904,76 @@ footer strong { color: var(--ink); }
 /* Grid placement for items Claude's block left to auto-placement (legend's max-content collapsed column 1) */
 .controls .result-count { grid-column: 1 / -1; grid-row: 3; }
 .controls .legend { grid-column: 1 / -1; grid-row: 4; }
+
+/* Second pixel review. Appended: later rules override earlier ones. */
+
+/* 1. Solid top bar so the sticky hero panel cannot tint it */
+header.topbar {
+  background: var(--elevated);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+/* 2. Drawer figures sit on a shared baseline */
+.detail-grid div {
+  display: flex;
+  flex-direction: column;
+}
+.detail-grid dd {
+  margin-top: auto;
+  padding-top: 6px;
+}
+
+/* 3. PCN select: room for names, ellipsis for the longest */
+.controls select {
+  width: 320px;
+  max-width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+@media (max-width: 640px) {
+  .controls select { width: auto; min-width: 0; }
+}
+
+/* 5. Drawer reading rhythm */
+
+.detail h4 {
+  margin: 24px 0 6px;
+  font: 600 14px/1.4 var(--f-ui);
+  color: var(--ink);
+}
+.detail p { margin-bottom: 0; }
+.detail .opener {
+  margin: 0;
+  padding: 12px 16px;
+  background: var(--elevated);
+  border-left: 3px solid var(--clay);
+  border-radius: 0 var(--r-tile) var(--r-tile) 0;
+  font-family: var(--f-display);
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--ink);
+}
+.detail ul {
+  margin: 0;
+  padding-left: 18px;
+}
+.detail li { margin-bottom: 6px; }
+.detail li:last-child { margin-bottom: 0; }
+.detail li::marker { color: var(--ink-3); }
+
+/* 6. Close button ring and drawer scrollbar */
+.detail-close:focus-visible { outline-offset: 0; }
+.detail-drawer {
+  scrollbar-width: thin;
+  scrollbar-color: var(--hair-strong) transparent;
+}
+
+
+/* 7. Count chips in numeric columns align to the column edge */
+td.num .badge {
+  font: 500 13.5px/1.35 var(--f-mono);
+  padding: 1px 6px;
+  margin-right: -6px;
+}
