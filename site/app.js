@@ -71,9 +71,12 @@ function placeDetail(row){
   }else{
     homeMarker.after(detail);detailRow=null;
   }}
+let lastOpener=null;
 function hideDetail(){
+  const wasOpen=!detail.classList.contains('hidden');
   detail.classList.add('hidden');
-  if(detailRow){homeMarker.after(detail);detailRow.remove();detailRow=null}}
+  if(detailRow){homeMarker.after(detail);detailRow.remove();detailRow=null}
+  if(wasOpen&&lastOpener&&lastOpener.isConnected){const b=lastOpener.querySelector('.practice-name');(b||lastOpener).focus();lastOpener=null}}
 function showDetail(code){
   const p=DATA.practices.find(x=>x.code===code);if(!p)return;
   tbody.querySelectorAll('tr.selected').forEach(t=>t.classList.remove('selected'));
@@ -108,7 +111,7 @@ function showDetail(code){
     <li>What happens to a caller at 8:05am today: queue, engaged tone, or a person?</li>
     <li>How do you currently measure whether every patient gets through, including patients with speech difficulties or English as an additional language?</li>
     <li>If calls were answered promptly, what would your reception team do with the freed hours?</li></ul>`;
-  detail.classList.remove('hidden');placeDetail(row);const cb=detail.querySelector('.detail-close');if(cb)cb.focus()}
+  lastOpener=row;detail.classList.remove('hidden');placeDetail(row);const cb=detail.querySelector('.detail-close');if(cb)cb.focus()}
 
 tbody.addEventListener('click',e=>{const tr=e.target.closest('tr');if(tr&&!tr.classList.contains('detail-row'))showDetail(tr.dataset.code)});
 detail.addEventListener('click',e=>{if(e.target.classList.contains('detail-close'))hideDetail()});
