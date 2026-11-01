@@ -20,22 +20,31 @@ function rows(){
     return (ka<kb?-1:ka>kb?1:0)*state.sortDir});
   return r}
 
+const pct = v => (v == null || isNaN(v)) ? null : Number(v).toFixed(1) + '%';
+const KEEP_UPPER = new Set(['PCN', 'NHS', 'GP', 'ICB', 'NEL']);
+function tidyName(s) {
+  return String(s).toLowerCase()
+    .replace(/[a-z][a-z']*/g, w => w[0].toUpperCase() + w.slice(1))
+    .replace(/[A-Za-z]+/g, w => KEEP_UPPER.has(w.toUpperCase()) ? w.toUpperCase() : w)
+    .replace(/'/g, '\u2019').replace(/^At Medics/, 'AT Medics');
+}
+const TIER_SHORT={high:'Priority',moderate:'Building',hold:'Holding',unknown:'No data',low_volume:'Low volume'};
 const NIL='<span class="nil">n/a</span>';
 function fmt(v){return v==null?NIL:v}
 function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
 
 function render(){hideDetail();
   const r=rows();
-  count.textContent=r.length+' of '+DATA.practices.length+' practices · '+DATA.icb+' · '+DATA.period;
+  count.textContent=r.length+' of '+DATA.practices.length+' practices shown';
   let h='';
   for(const p of r){
-    h+=`<tr data-code="${p.code}" data-tier="${TIER_CLASS[p.tier]}"><td><button class="practice-name linkbtn">${esc(p.name)}</button><span class="practice-code">${esc(p.pc)}</span></td>
-    <td class="pcn">${esc(p.pcn||'n/a')}</td>
+    h+=`<tr data-code="${p.code}" data-tier="${TIER_CLASS[p.tier]}"><td><button class="practice-name linkbtn">${esc(tidyName(p.name))}</button><span class="practice-meta"><span class="practice-code">${esc(p.pc)}</span><span class="badge ${TIER_CLASS[p.tier]}">${TIER_SHORT[p.tier]}</span></span></td>
+    <td class="pcn">${esc(p.pcn?tidyName(p.pcn):'n/a')}</td>
     <td class="num">${fmt(p.patients?p.patients.toLocaleString():null)}</td>
     <td class="num">${fmt(p.inb810!=null?p.inb810.toLocaleString():null)}</td>
     <td class="num">${fmt(p.missN!=null?p.missN.toLocaleString():null)}</td>
-    <td class="num">${fmt(p.miss810!=null?p.miss810+'%':null)}</td>
-    <td class="num">${fmt(p.fast810!=null?p.fast810+'%':null)}</td></tr>`}
+    <td class="num">${fmt(pct(p.miss810))}</td>
+    <td class="num">${fmt(pct(p.fast810))}</td></tr>`}
   tbody.innerHTML=h;
   renderPcn()}
 
@@ -44,7 +53,7 @@ function renderPcn(){
   for(const p of DATA.pcns){
     h+=`<tr><td><span class="practice-name">${esc(p.pcn)}</span></td><td class="num">${p.practices}</td>
     <td class="num">${p.high?'<span class="badge priority">'+p.high+'</span>':NIL}</td>
-    <td class="num">${p.moderate||NIL}</td><td class="num">${p.miss810!=null?p.miss810+'%':NIL}</td>
+    <td class="num">${p.moderate||NIL}</td><td class="num">${pct(p.miss810)||NIL}</td>
     <td class="num">${p.patients.toLocaleString()}</td></tr>`}
   document.getElementById('pcnbody').innerHTML=h}
 
@@ -70,26 +79,26 @@ function showDetail(code){
   const row=tbody.querySelector(`tr[data-code="${p.code}"]`);if(row)row.classList.add('selected');
   let why,opener;
   if(p.tier==='high'){
-    why=`${p.missN.toLocaleString()} 8–10am calls were missed in September: ${p.miss810}% of ${p.inb810.toLocaleString()} calls in that window, at one practice, in one month. Some callers will have rung again or been helped another way; the count is call outcomes, not unique patients.`;
-    opener=`"I read ${esc(p.name)}'s own NHS telephony return: ${p.missN.toLocaleString()} calls were missed between 8 and 10am in September alone. EMMA answers every call on the first ring. Worth ten minutes to walk through what that would look like for your ${p.patients?p.patients.toLocaleString():''} patients?"`;
+    why=`In September, ${p.missN.toLocaleString()} calls between 8 and 10am were missed: ${p.miss810}% of ${p.inb810.toLocaleString()} in that window, at one practice, in one month. Some callers will have rung again or been helped another way; the count is call outcomes, not unique patients.`;
+    opener=`\u201cI read ${esc(tidyName(p.name))}\u2019s own NHS telephony return: ${p.missN.toLocaleString()} calls were missed between 8 and 10am in September alone. EMMA is built to answer every call within three rings. Worth ten minutes to walk through what that would look like for your ${p.patients?p.patients.toLocaleString():''} patients?\u201d`;
   }else if(p.tier==='moderate'){
     why=`Phone performance is middling: ${p.miss810}% missed at 8–10am, ${p.fast810}% answered within two minutes. Beaten by pressure spikes, not broken; a demo anchored to their own busiest hour lands better than a cold pitch.`;
-    opener=`"Your September data shows the phones holding up most mornings but slipping at peak: ${p.miss810}% missed between 8 and 10. EMMA takes the overflow so no caller waits. Can I show you how practices like yours set that up?"`;
+    opener=`\u201cYour September data shows the phones holding up most mornings but slipping at peak: ${pct(p.miss810)} missed between 8 and 10. EMMA takes the overflow so no caller waits. Can I show you how practices like yours set that up?\u201d`;
   }else if(p.tier==='hold'){
     why=`Phones are performing well (${p.miss810}% missed, ${p.fast810}% within two minutes). Not a first call, but a good benchmark reference for neighbouring practices, and worth keeping warm.`;
-    opener=`"Your practice is one of the stronger performers on phone access in the area, which makes you exactly the reference point for what good looks like. Curious how you got there, and whether EMMA could free the team from the phone altogether."`;
+    opener=`\u201cYour practice is one of the stronger performers on phone access in the area, which makes you exactly the reference point for what good looks like. Curious how you got there, and whether EMMA could free the team from the phone altogether.\u201d`;
   }else{
-    why=`This practice isn't in the September cloud-telephony return, so step one of the call is a discovery question, not a stat.`;
-    opener=`"Quick one: are you on the NHS cloud-telephony framework yet? I ask because the answer changes what I can show you about your own phone data."`;}
+    why=`This practice isn\u2019t in the September cloud-telephony return, so step one of the call is a discovery question, not a stat.`;
+    opener=`\u201cQuick one: are you on the NHS cloud-telephony framework yet? I ask because the answer changes what I can show you about your own phone data.\u201d`;}
   const stat=(v,l)=>`<div><dt>${l}</dt><dd>${v}</dd></div>`;
-  detail.innerHTML=`<button class="dclose" aria-label="Close">×</button>
+  detail.innerHTML=`<button class="detail-close" aria-label="Close details">×</button>
   <h3>${esc(p.name)}</h3><p class="detail-sub">${esc(p.pc)} · ${esc(p.pcn||'PCN unknown')} · ODS ${esc(p.code)} · <span class="badge ${TIER_CLASS[p.tier]}">${TIER_LABEL[p.tier]}</span></p>
   <dl class="detail-grid">
     ${stat(p.patients?p.patients.toLocaleString():'n/a','Registered patients (Oct 2026)')}
     ${stat(p.inb810!=null?p.inb810.toLocaleString():'n/a','8–10am calls (Sept)')}
     ${stat(p.missN!=null?p.missN.toLocaleString():'n/a','Missed 8–10am calls (Sept)')}
-    ${stat(p.miss810!=null?p.miss810+'%':'n/a','Missed, 8–10am')}
-    ${stat(p.fast810!=null?p.fast810+'%':'n/a','Answered ≤2 min, 8–10am')}
+    ${stat(pct(p.miss810)||'n/a','Missed, 8–10am')}
+    ${stat(pct(p.fast810)||'n/a','Answered ≤2 min, 8–10am')}
     ${stat(p.inbAll!=null?p.inbAll.toLocaleString():'n/a','All-day calls (8–18:30)')}
   </dl>
   <h4>Why this practice</h4><p>${why}</p>
@@ -98,10 +107,10 @@ function showDetail(code){
     <li>What happens to a caller at 8:05am today: queue, engaged tone, or a person?</li>
     <li>How do you currently measure whether every patient gets through, including patients with speech difficulties or English as an additional language?</li>
     <li>If calls were answered on the first ring, what would your reception team do with the freed hours?</li></ul>`;
-  detail.classList.remove('hidden');placeDetail(row)}
+  detail.classList.remove('hidden');placeDetail(row);const cb=detail.querySelector('.detail-close');if(cb)cb.focus()}
 
 tbody.addEventListener('click',e=>{const tr=e.target.closest('tr');if(tr&&!tr.classList.contains('detail-row'))showDetail(tr.dataset.code)});
-detail.addEventListener('click',e=>{if(e.target.classList.contains('dclose'))hideDetail()});
+detail.addEventListener('click',e=>{if(e.target.classList.contains('detail-close'))hideDetail()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')hideDetail()});
 document.querySelectorAll('.tf').forEach(b=>b.addEventListener('click',()=>{
   document.querySelectorAll('.tf').forEach(x=>{x.classList.remove('active');x.setAttribute('aria-pressed','false')});

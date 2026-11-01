@@ -22,9 +22,9 @@
 <section class="hero" id="top">
   <div class="hero-letter">
     <h1>Surgery Scout</h1>
-    <p class="pitch"><strong>I read the SDR job description.</strong> It says you sell EMMA, an AI receptionist for NHS GP surgeries, and the biggest number in the story is the 8am rush. I read the same coverage your prospects have read - the BBC, Healthwatch and trade press on AI receptionists, good and bad.</p>
-<p class="pitch"><strong>So I built the tool I&rsquo;d actually use on day one.</strong> Surgery Scout turns NHS England&rsquo;s public cloud-telephony data into a prioritised, practice-by-practice call list for North East London - 261 practices and 48 PCNs, every one traceable by its NHS practice code, with the objections already loaded.</p>
-<p class="pitch"><strong>Telephony figures come from NHS England&rsquo;s published September 2026 return;</strong> practice identities and list sizes from the October 2026 registration extract. Definitions, my editorial tier thresholds and the exact source links are in the Method below, so the fastest route from &ldquo;who do I call this morning?&rdquo; to a conversation worth having is also a checkable one.</p>
+    <p class="pitch"><strong>I read the SDR job description.</strong> It says you sell EMMA, an AI receptionist for NHS GP surgeries, and that the 8am rush is the problem it solves. I read the same coverage your prospects have read: the BBC, Healthwatch and trade press on AI receptionists, good and bad.</p>
+<p class="pitch"><strong>So I built the tool I&rsquo;d actually use on day one.</strong> Surgery Scout turns NHS England&rsquo;s public cloud-telephony data into a prioritised, practice-by-practice call list for North East London: 261 practices and 48 PCNs, each traceable by its NHS practice code, with the objections already loaded.</p>
+<p class="pitch"><strong>Every figure is checkable.</strong> Telephony figures come from NHS England&rsquo;s published September 2026 return, and practice identities and list sizes from the October 2026 registration extract. Definitions, my tier thresholds and the exact source links are in the Method below.</p>
   </div>
   </div>
   <aside class="hero-panel" aria-label="Data scope">
@@ -38,8 +38,7 @@
 </section>
 
 <section class="controls" id="list">
-  <div class="control-row">
-    <input type="search" id="search" placeholder="Search practice or PCN&hellip;" aria-label="Search">
+  <input type="search" class="search" id="search" placeholder="Search practice or PCN" aria-label="Search practices or PCNs">
     <div class="tf-group" role="group" aria-label="Filter by tier">
       <button class="tf active" data-tier="all" aria-pressed="true">All</button>
       <button class="tf" data-tier="priority" aria-pressed="false">Priority <span class="count">81</span></button>
@@ -48,8 +47,7 @@
       <button class="tf" data-tier="nodata" aria-pressed="false">No telephony data <span class="count">17</span></button>
     </div>
     <label class="field"><span>PCN</span><select id="pcnFilter"><option value="">All PCNs</option></select></label>
-  </div>
-  <p class="count-line" id="count"></p>
+  <p class="result-count" id="count" aria-live="polite"></p>
   <ul class="legend">
     <li><span class="badge priority">Priority</span> missed 15%+ of 8&ndash;10am calls, or 40% or fewer answered within 2 min</li>
     <li><span class="badge building">Building</span> missed 8&ndash;15% or 40&ndash;60% fast-answer</li>
@@ -69,7 +67,7 @@
   </table>
 </div>
 
-<aside id="detail" class="detail hidden" aria-live="polite"></aside>
+<aside id="detail" class="detail detail-drawer hidden" aria-live="polite"></aside>
 
 <section class="pcn">
   <h2>PCN view: where a network conversation makes sense</h2>
