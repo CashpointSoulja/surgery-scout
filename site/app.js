@@ -48,7 +48,7 @@ function showDetail(code){
   const p=DATA.practices.find(x=>x.code===code);if(!p)return;
   let why,opener;
   if(p.tier==='high'){
-    why=`${p.missN.toLocaleString()} 8–10am calls went unanswered in September — ${p.miss810}% of ${p.inb810.toLocaleString()} calls in that window, at one practice, in one month. That's before counting callers who gave up during the IVR message.`;
+    why=`${p.missN.toLocaleString()} 8–10am calls went unanswered in September — ${p.miss810}% of ${p.inb810.toLocaleString()} calls in that window, at one practice, in one month. Some callers will have rung again or been helped another way — the count is call outcomes, not unique patients.`;
     opener=`"I read ${esc(p.name)}'s own NHS telephony return — ${p.missN.toLocaleString()} calls went unanswered between 8 and 10am in September alone. EMMA answers every call on the first ring. Worth ten minutes to walk through what that would look like for your ${p.patients?p.patients.toLocaleString():''} patients?"`;
   }else if(p.tier==='moderate'){
     why=`Phone performance is middling: ${p.miss810}% missed at 8–10am, ${p.fast810}% answered within two minutes. Beaten by pressure spikes, not broken — a demo anchored to their own busiest hour lands better than a cold pitch.`;
@@ -60,7 +60,7 @@ function showDetail(code){
     why=`This practice isn't in the September cloud-telephony return — so step one of the call is a discovery question, not a stat.`;
     opener=`"Quick one — are you on the NHS cloud-telephony framework yet? I ask because the answer changes what I can show you about your own phone data."`;}
   detail.innerHTML=`<button class="dclose" aria-label="Close">×</button>
-  <h3>${esc(p.name)}</h3><div class="dmeta">${esc(p.pc)} · ${esc(p.pcn||'PCN unknown')} · <span class="badge b-${p.tier}">${TIER_LABEL[p.tier]}</span></div>
+  <h3>${esc(p.name)}</h3><div class="dmeta">${esc(p.pc)} · ${esc(p.pcn||'PCN unknown')} · ODS ${esc(p.code)} · <span class="badge b-${p.tier}">${TIER_LABEL[p.tier]}</span></div>
   <div class="dgrid">
     <div class="stat"><b>${p.patients?p.patients.toLocaleString():'—'}</b><span>Registered patients (Oct 2026)</span></div>
     <div class="stat"><b>${p.inb810!=null?p.inb810.toLocaleString():'—'}</b><span>8–10am calls (Sept)</span></div>
@@ -89,3 +89,4 @@ searchEl.addEventListener('input',()=>{state.q=searchEl.value;render()});
 document.querySelectorAll('#ptable th').forEach(th=>th.addEventListener('click',()=>{
   const k=th.dataset.k;if(state.sortK===k)state.sortDir*=-1;else{state.sortK=k;state.sortDir=-1}render()}));
 render();
+if(location.hash.length>1){const p0=DATA.practices.find(x=>x.code===location.hash.slice(1));if(p0)showDetail(p0.code)}
