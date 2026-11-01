@@ -11,10 +11,13 @@ MONTHS = {
   '2026-09': ('cbt-daytime', 'cbt-answered'),
 }
 CORE_ALLDAY = ['08:00-09:59','10:00-11:59','12:00-13:59','14:00-15:59','16:00-17:59','18:00-18:29']
-B_LE120 = {'1_30','31_60','61_90','91_120'}
+# Wait_Time is how long the call waited to be answered, in seconds (publication metadata).
+# '0' is answered without waiting, so it belongs in both the <=30s and <=120s sets.
+B_LE30 = {'0','1_30'}
+B_LE120 = {'0','1_30','31_60','61_90','91_120'}
 
 old = json.loads(open('/home/sandbox/surgery-scout/site/data.js').read()[len('const DATA = '):].rstrip().rstrip(';'))
-roster = {p['code']: p for p in old['practices']}
+roster = {(p.get('code') or p.get('ods')): p for p in old['practices']}
 print('roster', len(roster), file=sys.stderr)
 
 pcn_code = {}   # practice -> PCN_CODE from telephony
@@ -45,7 +48,7 @@ for month, (daydir, ansdir) in MONTHS.items():
                 d['in_ans'] = True
                 v = float(row['Value'])
                 d['answered'] += v
-                if row['Wait_Time'] == '1_30': d['ans_le30'] += v
+                if row['Wait_Time'] in B_LE30: d['ans_le30'] += v
                 if row['Wait_Time'] in B_LE120: d['ans_le120'] += v
     print(month, 'practices in day file:', sum(1 for d in a.values() if d['in_day']), file=sys.stderr)
 
@@ -66,8 +69,8 @@ for code, p in roster.items():
                 'inbound_allday': i(d['inbound_allday']),
             }
     practices.append({
-        'ods': code, 'name': p['name'], 'postcode': p['pc'],
-        'pcn_code': pcn_code.get(code), 'pcn_name': p['pcn'],
+        'ods': code, 'name': p['name'], 'postcode': p.get('pc') or p.get('postcode'),
+        'pcn_code': pcn_code.get(code) or p.get('pcn_code'), 'pcn_name': p.get('pcn') or p.get('pcn_name'),
         'patients': p['patients'],
         'months': months,
         # v1 fields retained for reference
